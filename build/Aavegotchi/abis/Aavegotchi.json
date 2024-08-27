@@ -39,7 +39,11 @@
       },
       {
         "components": [
-          { "internalType": "uint32", "name": "_tokenId", "type": "uint32" },
+          {
+            "internalType": "uint32",
+            "name": "_tokenId",
+            "type": "uint32"
+          },
           {
             "internalType": "bool",
             "name": "_isLendingOperator",
@@ -63,8 +67,16 @@
         "name": "_lendingOperator",
         "type": "address"
       },
-      { "internalType": "uint32", "name": "_tokenId", "type": "uint32" },
-      { "internalType": "bool", "name": "_isLendingOperator", "type": "bool" }
+      {
+        "internalType": "uint32",
+        "name": "_tokenId",
+        "type": "uint32"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isLendingOperator",
+        "type": "bool"
+      }
     ],
     "name": "setLendingOperator",
     "outputs": [],

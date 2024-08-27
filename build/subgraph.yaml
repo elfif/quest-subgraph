@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: Aavegotchi
@@ -17,8 +17,8 @@ dataSources:
         - ERC721ExecutedListing
       abis:
         - name: Aavegotchi
-          file: ./abis/Aavegotchi.json
+          file: Aavegotchi/abis/Aavegotchi.json
       eventHandlers:
         - event: LendingOperatorSet(indexed address,indexed address,indexed uint32,bool)
           handler: handleLendingOperatorSet
-      file: ./src/aavegotchi.ts
+      file: Aavegotchi/Aavegotchi.wasm

@@ -1,53 +1,28 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { store } from "@graphprotocol/graph-ts"
 import {
-  Aavegotchi,
   LendingOperatorSet,
-  ERC721ExecutedListing
 } from "../generated/Aavegotchi/Aavegotchi"
-import { ExampleEntity } from "../generated/schema"
+import { GotchiOperator } from "../generated/schema"
 
+/**
+ * 
+ * @param event 
+ */
 export function handleLendingOperatorSet(event: LendingOperatorSet): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from)
-
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from)
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
+  // Build the id based on the gotchi id and the owner address.
+  const id = event.params.lendingOperator.toHexString()+"_"+event.params.lender.toHexString()+"_"+event.params.tokenId.toString()
+  // Check if operator was enabled or disabled
+  if (event.params.isLendingOperator) {
+      let gotchiOperator = new GotchiOperator(id)
+      gotchiOperator.gotchiId = event.params.tokenId
+      gotchiOperator.operator = event.params.lendingOperator
+      gotchiOperator.owner = event.params.lender
+      gotchiOperator.save()
+  } else {
+    let gotchiOperator = GotchiOperator.load(id)
+    // if disabled we find and delete the operator in the array
+    if (gotchiOperator) {
+      store.remove('GotchiOperator', id)
+    }
   }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.lender = event.params.lender
-  entity.lendingOperator = event.params.lendingOperator
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // None
 }
-
-export function handleERC721ExecutedListing(
-  event: ERC721ExecutedListing
-): void {}
